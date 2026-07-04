@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper AI Assistant</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+    <!-- Background Animated Glow Dots -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="material-symbols-outlined">psychology</span>
+                    <span>Research AI</span>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <nav class="nav">
+                <button class="nav-btn active" data-tab="search">
+                    <span class="material-symbols-outlined">search</span>
+                    <span>Semantic Search</span>
+                </button>
+                <button class="nav-btn" data-tab="chat">
+                    <span class="material-symbols-outlined">chat</span>
+                    <span>AI Assistant</span>
+                </button>
+            </nav>
+
+            <!-- Library / File Manager section -->
+            <div class="sidebar-section">
+                <div class="section-title">
+                    <span>MY LIBRARY</span>
+                    <button id="manage-files-btn" class="refresh-btn" title="Refresh Files">
+                        <span class="material-symbols-outlined">sync</span>
+                    </button>
+                </div>
+
+                <!-- Integrated Upload Box -->
+                <div class="upload-box" id="upload-box">
+                    <span class="material-symbols-outlined">cloud_upload</span>
+                    <p class="upload-text">Drag & drop PDF here</p>
+                    <span class="upload-subtext">or click to browse</span>
+                    <input type="file" id="file-input" accept=".pdf" hidden>
+                    <button class="btn btn-secondary btn-xs" id="browse-btn" style="display:none;">Browse</button>
+                </div>
+
+                <!-- Upload Progress -->
+                <div id="upload-progress" class="upload-progress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <p class="progress-text">Uploading...</p>
+                </div>
+
+                <!-- Available Papers List -->
+                <div class="files-container">
+                    <div id="files-list" class="files-list">
+                        <p class="loading-text">Loading papers...</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main">
+            <!-- Header bar -->
+            <header class="main-header">
+                <div class="header-info">
+                    <h1 id="active-tab-title">Semantic Search</h1>
+                    <p id="active-tab-subtitle">Search research papers by meaning, not just keywords</p>
+                </div>
+                
+                <div class="header-actions">
+                    <!-- File focus filter -->
+                    <div class="file-selector">
+                        <label for="file-select">
+                            <span class="material-symbols-outlined">filter_list</span>
+                            <span>Focus:</span>
+                        </label>
+                        <select id="file-select" class="select-input">
+                            <option value="">All papers</option>
+                        </select>
+                    </div>
+
+                    <!-- Clear chat button (only shows on chat tab) -->
+                    <button id="clear-chat-btn" class="btn btn-secondary btn-icon" style="display: none;" title="Clear Chat">
+                        <span class="material-symbols-outlined">delete</span>
+                        <span>Clear Chat</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Workspace content -->
+            <div class="workspace-content">
+                <!-- Search Tab -->
+                <div class="tab-content active" id="search-tab">
+                    <div class="search-section">
+                        <div class="search-box glass-panel">
+                            <div class="search-input-wrapper">
+                                <span class="material-symbols-outlined search-icon-inside">search</span>
+                                <input 
+                                    type="text" 
+                                    id="search-input" 
+                                    placeholder="Ask a conceptual question, e.g., 'attention mechanism in transformers' or 'how does ResNet resolve vanishing gradients?'"
+                                    class="search-input"
+                                >
+                            </div>
+                            <div class="search-controls">
+                                <div class="control-group">
+                                    <label class="control-label" for="top-k-select">
+                                        <span>Show:</span>
+                                    </label>
+                                    <select id="top-k-select" class="select-input">
+                                        <option value="3">3 matches</option>
+                                        <option value="5" selected>5 matches</option>
+                                        <option value="10">10 matches</option>
+                                    </select>
+                                </div>
+                                <button id="search-btn" class="btn btn-primary">
+                                    <span class="material-symbols-outlined">search</span>
+                                    Search Database
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="search-results" class="results-container">
+                            <div class="empty-state">
+                                <span class="material-symbols-outlined animate-pulse">find_in_page</span>
+                                <h3>Ready to search</h3>
+                                <p>Enter a query above to retrieve semantically related passages from your research paper database.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Tab -->
+                <div class="tab-content" id="chat-tab">
+                    <div class="chat-section">
+                        <div class="chat-container glass-panel">
+                            <div id="chat-messages" class="chat-messages">
+                                <div class="welcome-message">
+                                    <div class="bot-avatar-large">
+                                        <span class="material-symbols-outlined">smart_toy</span>
+                                    </div>
+                                    <h3>AI Research Assistant</h3>
+                                    <p>I can help you understand research papers, summarize complex theories, and synthesize information from your uploaded library.</p>
+                                    <div class="example-questions">
+                                        <span class="example-title">Quick Prompts:</span>
+                                        <button class="example-btn">Explain the attention mechanism in Transformers</button>
+                                        <button class="example-btn">What are the primary contributions of ResNet?</button>
+                                        <button class="example-btn">How does contrastive learning work in computer vision?</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chat Input Box -->
+                            <div class="chat-input-container">
+                                <div class="chat-options">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="use-rag" checked>
+                                        <span class="checkbox-custom"></span>
+                                        <span>Augment response with paper context (RAG)</span>
+                                    </label>
+                                </div>
+                                <div class="chat-input-box">
+                                    <textarea 
+                                        id="chat-input" 
+                                        placeholder="Ask a question about your papers..."
+                                        rows="1"
+                                    ></textarea>
+                                    <button id="send-btn" class="btn btn-primary btn-round" title="Send Message">
+                                        <span class="material-symbols-outlined">send</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Hidden compat elements to prevent JS errors -->
+    <div id="file-modal" class="modal" style="display: none !important; pointer-events: none; opacity: 0; width: 0; height: 0;">
+        <button id="close-modal" style="display: none !important;"></button>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <div class="spinner-inner"></div>
+        </div>
+        <p>Analyzing document database...</p>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

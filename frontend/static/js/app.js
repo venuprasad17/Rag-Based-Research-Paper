@@ -44,7 +44,9 @@ const elements = {
 
 // ===== API Functions =====
 const API = {
-    baseURL: window.location.origin,
+    baseURL: (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
+        ? window.location.origin 
+        : 'https://rag-based-research-paper-search.onrender.com',
     
     async search(query, topK = 5) {
         const response = await fetch(`${this.baseURL}/api/search`, {
